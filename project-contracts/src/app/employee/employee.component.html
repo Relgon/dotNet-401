@@ -1,0 +1,23 @@
+<md-grid-list cols="4" rowHeight="300px">
+  <md-grid-tile *ngFor="let employee of employees">
+    <md-card>
+      <md-card-header>
+        <div md-card-avatar class="employee-card-avatar"></div>
+        <md-card-title>{{employee.name}} {{employee.middleName}} {{employee.lastName}}</md-card-title>
+        <md-card-subtitle>
+        
+        </md-card-subtitle>
+      </md-card-header>
+      <md-card-content>
+        <p>Position :  <a href="#">{{employee.positionName}}</a></p>
+        <a [routerLink]="['/employee',employee.id,'projects']">Projects</a>
+        <p>Characteristics: {{employee.characteristics}}</p>
+        <p>Address: {{getFormattedAddress(employee.address)}}</p>
+      </md-card-content>
+      <md-card-actions>
+        <!--<button md-button>EDIT</button>
+        <button md-button>DELETE</button>-->
+       </md-card-actions>
+    </md-card>
+	</md-grid-tile>
+</md-grid-list>

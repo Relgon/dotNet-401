@@ -1,0 +1,14 @@
+<md-toolbar>
+  <div class="toolbar-button-row">
+    <a md-button
+       *ngFor="let toplink of links"
+       [routerLink]="toplink.path">
+      <md-icon>{{toplink.icon}}</md-icon>  
+      {{toplink.label}}
+
+    </a>
+  </div>
+</md-toolbar>
+<div class="app-content"> 
+     <router-outlet></router-outlet>
+</div>
