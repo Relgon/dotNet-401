@@ -15,8 +15,8 @@ namespace ProjectContracts.AutoMapper {
 				.ForMember(dest => dest.Address, opt => opt.MapFrom(t => t.Address));
 
 			CreateMap<EmployeeProject, EmployeeProjectVM>()
-				.ForMember(dest => dest.DaysOnProject, opt => opt.MapFrom(t => (t.EndDate - t.StartDate).Days));
-
+				.ForMember(dest => dest.DaysOnProject, opt => opt.MapFrom(t => (t.EndDate - t.StartDate).Days))
+				.ForMember(dest => dest.ProjectName, opt => opt.MapFrom(t => t.Project.Title));
 		}
 	}
 }

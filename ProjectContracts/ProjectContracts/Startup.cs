@@ -12,6 +12,8 @@ using DAL.Context;
 using AutoMapper;
 using ProjectContracts.Service;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Routing;
+using ProjectContracts.Manager;
 
 namespace ProjectContracts
 {
@@ -44,15 +46,20 @@ namespace ProjectContracts
 			services.AddScoped<IPositionService, PositionService>();
 			services.AddScoped<IProjectService, ProjectService>();
 			services.AddScoped<IEmployeeService, EmployeeService>();
+			services.AddScoped<IRouteManager, RouteManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, EntityDbContext context)
+        public void Configure(IApplicationBuilder app,
+							  IHostingEnvironment env, 
+							  ILoggerFactory loggerFactory, 
+							  EntityDbContext context,
+							  IRouteManager routeManager)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-			app.UseMvc();
+			app.UseRouter(routeManager.ConfigureRouts);
 			app.UseStaticFiles();
 			//app.UseDefaultFiles(new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } });
 			DbInitializer.Initialize(context);
