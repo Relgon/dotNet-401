@@ -4,7 +4,6 @@ using System;
 namespace DAL.Context {
 	public class DbInitializer {
 		public static void Initialize(EntityDbContext context) {
-			context.Database.EnsureDeleted();
 			context.Database.EnsureCreated();
 			for (var i = 1; i < 20; i++) {
 				context.Positions.Add(new Position {
