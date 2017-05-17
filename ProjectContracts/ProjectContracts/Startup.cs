@@ -8,10 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using DAL.Context;
 using AutoMapper;
 using ProjectContracts.Service;
 using Newtonsoft.Json.Serialization;
+using DAL.Repository.Base;
 
 namespace ProjectContracts
 {
@@ -37,17 +37,19 @@ namespace ProjectContracts
 				.AddJsonOptions(options => {
 					options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 				});
-			services.AddDbContext<EntityDbContext>(options =>
-				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 			services.AddAutoMapper();
 
 			services.AddScoped<IPositionService, PositionService>();
 			services.AddScoped<IProjectService, ProjectService>();
 			services.AddScoped<IEmployeeService, EmployeeService>();
+			services.AddScoped<BaseRepository>(t => {
+				var connectionString = Configuration.GetConnectionString("DefaultConnection");
+				return new BaseRepository(connectionString);
+			});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, EntityDbContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -55,7 +57,6 @@ namespace ProjectContracts
 			app.UseMvc();
 			app.UseStaticFiles();
 			//app.UseDefaultFiles(new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } });
-			DbInitializer.Initialize(context);
         }
     }
 }

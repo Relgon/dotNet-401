@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using DAL.Context;
 using ProjectContracts.ViewModel;
+using DAL.Repository.Base;
+using ProjectContracts.Model;
 
 namespace ProjectContracts.Service {
 
 
 	public class ProjectService : BaseService, IProjectService {
-		public ProjectService(EntityDbContext context, IMapper mapper) : base(context, mapper) {
+		public ProjectService(BaseRepository repository, IMapper mapper) : base(repository, mapper) {
 		}
 
 		public ICollection<ProjectVM> GetProjects() {
-			var projects = _context.Projects.ToList();
+			var projects = _repository.ExecuteSp<ProjectDto>("dbo.spGetProjects");
 			return _mapper.Map<ICollection<ProjectVM>>(projects);
 		}
 	}

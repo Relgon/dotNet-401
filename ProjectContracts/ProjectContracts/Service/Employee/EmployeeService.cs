@@ -1,27 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using DAL.Context;
 using ProjectContracts.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using DAL.Repository.Base;
+using ProjectContracts.Model;
 
 namespace ProjectContracts.Service {
 	public class EmployeeService : BaseService, IEmployeeService {
-		public EmployeeService(EntityDbContext context, IMapper mapper) : base(context, mapper) {
+		public EmployeeService(BaseRepository baseRepository, IMapper mapper) : base(baseRepository, mapper) {
 		}
 
 		public ICollection<EmployeeProjectVM> GetEmployeeProjects(int employeeId) {
-			var employeeProjects = _context.EmployeeProjects
-				.Include(t => t.Project)
-				.Where(t => t.EmployeeId == employeeId);
+			var parameters = new {
+				Id = employeeId
+			};
+			var employeeProjects = _repository.ExecuteSp<EmployeeProjectDto>("dbo.spGetEmployeeProjects", parameters);
 			return _mapper.Map<ICollection<EmployeeProjectVM>>(employeeProjects);
 		}
 
 		public ICollection<EmployeeVM> GetEmployees() {
-			var employees = _context.Employees
-				.Include(t => t.Address)
-				.Include(t => t.Position)
-				.ToList();
+			var employees = _repository.ExecuteSp<EmployeeDto>("dbo.spGetEmployees");
 			return _mapper.Map<ICollection<EmployeeVM>>(employees);
 		}
 	}

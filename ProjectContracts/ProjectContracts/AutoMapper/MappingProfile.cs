@@ -18,6 +18,18 @@ namespace ProjectContracts.AutoMapper {
 				.ForMember(dest => dest.DaysOnProject, opt => opt.MapFrom(t => (t.EndDate - t.StartDate).Days))
 				.ForMember(dest => dest.ProjectName, opt => opt.MapFrom(t => t.Project.Title));
 
+			CreateMap<PositionDto, PositionVM>();
+			CreateMap<ProjectDto, ProjectVM>();
+			CreateMap<EmployeeDto, EmployeeVM>()
+				.ForMember(dest => dest.Address, opt => opt.MapFrom(t => new Address {
+					Id = t.AddressId,
+					AdministrativeArea = t.AdministrativeArea,
+					Apartment = t.Apartment,
+					City = t.City,
+					Country = t.Country,
+					PostalCode = t.PostalCode
+				}));
+			CreateMap<EmployeeProjectDto, EmployeeProjectVM>();
 		}
 	}
 }

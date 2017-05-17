@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Reflection;
 
 namespace DAL.Repository.Base {
-	public abstract class BaseRepository {
+	public class BaseRepository {
 
 		private readonly string _connectionString;
 
@@ -22,15 +22,25 @@ namespace DAL.Repository.Base {
 					if (parameters != null) {
 						command.Parameters.AddRange(GetSqlParams(parameters));
 					}
-
+					connection.Open();
 					using (var reader = command.ExecuteReader()) {
 						while (reader.Read()) {
 							var entity = new TResult();
-
+							var type = typeof(TResult);
+							for (int i = 0; i < reader.FieldCount; i++) {
+								var value = reader.GetValue(i);
+								if (value is DBNull) {
+									value = null;
+								}
+								var property = type.GetProperty(reader.GetName(i));
+								property.SetValue(entity, value, null);
+							}
+							resultList.Add(entity);
 						}
 					}
 				}
 			}
+			return resultList;
 		}
 
 		private SqlParameter[] GetSqlParams(object parameters) {

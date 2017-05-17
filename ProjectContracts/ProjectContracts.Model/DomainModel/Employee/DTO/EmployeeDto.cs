@@ -6,6 +6,7 @@
 		public string Characteristics { get; set; }
 		public int PositionId { get; set; }
 		public string PositionName { get; set; }
+		public int AddressId { get; set; }
 		public string Country { get; set; }
 		public string AdministrativeArea { get; set; }
 		public string City { get; set; }
